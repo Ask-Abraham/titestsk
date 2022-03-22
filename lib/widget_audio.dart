@@ -6,25 +6,26 @@ class AudioWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Row(
-        children: [
-          IconButton(
-            icon: const Icon(
-                Icons.play_arrow
+    return Expanded(
+        child: Row(
+          children: [
+            IconButton(
+              icon: const Icon(
+                  Icons.play_arrow
+              ),
+              onPressed: () {
+
+              },
             ),
-            onPressed: () {
+            const Text('00:37'),
+            Slider(
+              value: 0,
+              onChanged: (double value) {
 
-            },
-          ),
-          const Text('00:37'),
-          Slider(
-            value: 0,
-            onChanged: (double value) {
-
-            },
-          ),
-          const Text('01:15'),
-        ],
+              },
+            ),
+            const Text('01:15'),
+          ],
       );
   }
 }
