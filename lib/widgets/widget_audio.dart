@@ -6,8 +6,7 @@ class AudioWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Expanded(
-        child: Row(
+    return Row(
           children: [
             IconButton(
               icon: const Icon(
