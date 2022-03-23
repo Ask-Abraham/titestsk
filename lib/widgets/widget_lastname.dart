@@ -16,7 +16,7 @@ class LastNameWidget extends StatelessWidget{
         debugPrint('Onsaved');
       },
       validator: (String? value) {
-        return (value != null && value.contains('@')) ? 'Invalid': null;
+        return (value!.isEmpty && value.contains('@')) ? 'Invalid Input': null;
       },
       keyboardType: TextInputType.name,
     );
