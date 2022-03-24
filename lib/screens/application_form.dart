@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:titestsk/widgets/widget_lastname.dart';
-import 'package:titestsk/widgets/widget_audio.dart';
-import 'package:titestsk/widgets/widget_firstname.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class ApplicationForm extends StatelessWidget {
   const ApplicationForm({Key? key}) : super(key: key);
@@ -27,6 +25,8 @@ class MyStatefulWidget extends StatefulWidget {
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final _formKey = GlobalKey<FormState>();
+  List<String> items = ['นาย', 'นาง', 'นางสาว', 'เด็กชาย', 'เด็กหญิง'];
+  String? selectedItem;
 
   @override
   Widget build(BuildContext context) {
@@ -34,37 +34,61 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       padding: const EdgeInsets.all(15.0),
       child: Form(
         key: _formKey,
-        autovalidateMode: AutovalidateMode.always,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Column(
           children: [
-            TextFormField(
+            DropdownButtonFormField<String>(
+              // decoration: const InputDecoration(
+              //   enabledBorder: OutlineInputBorder(
+              //       borderSide: BorderSide(width: 3, color: Colors.blue)),
+              // ),
+              hint: const Text('Prefix'),
               autofocus: true,
+              // value: selectedItem,
+              items: items
+                  .map((item) => DropdownMenuItem<String>(
+                        value: item,
+                        child: Text(item),
+                      ))
+                  .toList(),
+              onChanged: (item) => setState(() {
+                selectedItem = item;
+              }),
+            ),
+            TextFormField(
               textCapitalization: TextCapitalization.sentences,
               textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(hintText: 'Username'),
+              decoration: const InputDecoration(hintText: 'Firstname'),
               onSaved: (String? value) {
                 _formKey.currentState!.validate();
               },
               validator: (String? value) {
-                return (value!.isEmpty || value.contains('@')) ? 'Invalid Input': null;
+                return (value!.isEmpty || value.contains('@'))
+                    ? 'Invalid Input'
+                    : null;
               },
               keyboardType: TextInputType.name,
             ),
             TextFormField(
-              obscureText: true,
-              textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(hintText: 'Password'),
-              onSaved: (String? value) {
-                _formKey.currentState!.validate();
-              },
-              validator: (String? value) {
-                return (value!.isEmpty || value.length > 10) ? 'Invalid Input': null;
-              },
+                textInputAction: TextInputAction.next,
+                decoration: const InputDecoration(hintText: 'Lastname'),
+                onSaved: (String? value) {
+                  _formKey.currentState!.validate();
+                },
+                validator: (String? value) {
+                  return (value!.isEmpty || value.length > 10)
+                      ? 'Invalid Input'
+                      : null;
+                },
+              ),
+            SfDateRangePicker(
+              view: DateRangePickerView.month,
+              monthViewSettings: const DateRangePickerMonthViewSettings(firstDayOfWeek: 1),
             ),
             // TextButton(onPressed: null, child: Text('Save')),
             ElevatedButton(
               onPressed: () {
-                if(_formKey.currentState!.validate()){
+                if (_formKey.currentState!.validate()) {
                   Navigator.pop(context);
                 }
               },
