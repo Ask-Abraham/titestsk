@@ -24,13 +24,15 @@ class MyStatefulWidget extends StatefulWidget {
   State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
 }
 
+enum Nationality { Thai, Expat }
+
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final _formKey = GlobalKey<FormState>();
   List<String> items = ['นาย', 'นาง', 'นางสาว', 'เด็กชาย', 'เด็กหญิง'];
   String? selectedItem;
   DateTime selectedDate = DateTime.now();
   final TextEditingController _textEditingController = TextEditingController();
-  int _selectedChoice = 1;
+  Nationality _selectedChoice = Nationality.Thai;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -54,108 +56,165 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-        key: _formKey,
-        autovalidateMode: AutovalidateMode.always,
-        child: Column(children: [
-          const Text('Personal Infomation', style: TextStyle(fontSize: 20)),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15.0, 0, 15.0, 0),
+    return SingleChildScrollView(
+        child: Form(
+            key: _formKey,
+            autovalidateMode: AutovalidateMode.always,
             child: Column(children: [
-              DropdownButtonFormField<String>(
-                hint: const Text('Prefix'),
-                autofocus: true,
-                // value: selectedItem,
-                items: items
-                    .map((item) => DropdownMenuItem<String>(
-                          value: item,
-                          child: Text(item),
-                        ))
-                    .toList(),
-                onChanged: (item) => setState(() {
-                  selectedItem = item;
-                }),
-              ),
-              TextFormField(
-                textCapitalization: TextCapitalization.sentences,
-                textInputAction: TextInputAction.next,
-                decoration: const InputDecoration(hintText: 'Firstname'),
-                onSaved: (String? value) {
-                  _formKey.currentState!.validate();
-                },
-                validator: (String? value) {
-                  return (value!.isEmpty || value.contains('@'))
-                      ? 'Invalid Input'
-                      : null;
-                },
-                keyboardType: TextInputType.name,
-              ),
-              TextFormField(
-                textInputAction: TextInputAction.next,
-                decoration: const InputDecoration(hintText: 'Lastname'),
-                onSaved: (String? value) {
-                  _formKey.currentState!.validate();
-                },
-                validator: (String? value) {
-                  return (value!.isEmpty || value.length > 10)
-                      ? 'Invalid Input'
-                      : null;
-                },
-              ),
-              TextFormField(
-                controller: _textEditingController,
-                decoration: const InputDecoration(
-                    hintText: 'Birthdate',
-                    suffixIcon: Icon(Icons.calendar_month)),
-                onTap: () {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  _selectDate(context);
-                },
-                validator: (String? value) {
-                  return (value!.isEmpty) ? 'Invalid Input' : null;
-                },
-              ),
-            ]),
-          ),
-          Row(
-            children : const [
               Padding(
-                padding: EdgeInsets.fromLTRB(0,15.0, 0, 5.0),
-                child: Text('Nationality', style: TextStyle(fontSize: 20))
+                padding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
+                child: Column(children: [
+                  Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text('Personal Information',
+                            style: TextStyle(fontSize: 20))
+                      ]),
+                  const SizedBox(height: 20),
+                  DropdownButtonFormField<String>(
+                    hint: const Text('Prefix'),
+                    autofocus: true,
+                    // value: selectedItem,
+                    items: items
+                        .map((item) => DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(item),
+                            ))
+                        .toList(),
+                    onChanged: (item) => setState(() {
+                      selectedItem = item;
+                    }),
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    textCapitalization: TextCapitalization.sentences,
+                    textInputAction: TextInputAction.next,
+                    decoration: const InputDecoration(hintText: 'Firstname'),
+                    onSaved: (String? value) {
+                      _formKey.currentState!.validate();
+                    },
+                    validator: (String? value) {
+                      return (value!.isEmpty || value.contains('@'))
+                          ? 'Invalid Input'
+                          : null;
+                    },
+                    keyboardType: TextInputType.name,
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    textInputAction: TextInputAction.next,
+                    decoration: const InputDecoration(hintText: 'Lastname'),
+                    onSaved: (String? value) {
+                      _formKey.currentState!.validate();
+                    },
+                    validator: (String? value) {
+                      return (value!.isEmpty || value.length > 10)
+                          ? 'Invalid Input'
+                          : null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    controller: _textEditingController,
+                    decoration: const InputDecoration(
+                        hintText: 'Birthdate',
+                        suffixIcon: Icon(Icons.calendar_month)),
+                    onTap: () {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      _selectDate(context);
+                    },
+                    validator: (String? value) {
+                      return (value!.isEmpty) ? 'Invalid Input' : null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text('Nationality', style: TextStyle(fontSize: 20)),
+                      ]),
+                  RadioListTile<Nationality>(
+                    title: const Text('Thai'),
+                    value: Nationality.Thai,
+                    groupValue: _selectedChoice,
+                    onChanged: (Nationality? value) {
+                      setState(() {
+                        _selectedChoice = value!;
+                      });
+                    },
+                  ),
+                  RadioListTile(
+                    title: const Text('Expat'),
+                    value: Nationality.Expat,
+                    groupValue: _selectedChoice,
+                    onChanged: (Nationality? value) {
+                      setState(() {
+                        _selectedChoice = value!;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    textInputAction: TextInputAction.next,
+                    decoration: const InputDecoration(hintText: 'ID'),
+                    onSaved: (String? value) {
+                      _formKey.currentState!.validate();
+                    },
+                    validator: (String? value) {
+                      return (value!.isEmpty || value.length > 10)
+                          ? 'Invalid Input'
+                          : null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    textInputAction: TextInputAction.next,
+                    decoration: const InputDecoration(hintText: 'Mobile Number'),
+                    onSaved: (String? value) {
+                      _formKey.currentState!.validate();
+                    },
+                    validator: (String? value) {
+                      return (value!.isEmpty || value.length > 10)
+                          ? 'Invalid Input'
+                          : null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    textInputAction: TextInputAction.next,
+                    decoration: const InputDecoration(hintText: 'Email'),
+                    onSaved: (String? value) {
+                      _formKey.currentState!.validate();
+                    },
+                    validator: (String? value) {
+                      return (value!.isEmpty || value.length > 10)
+                          ? 'Invalid Input'
+                          : null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    textInputAction: TextInputAction.next,
+                    decoration: const InputDecoration(hintText: 'Confirm Email'),
+                    onSaved: (String? value) {
+                      _formKey.currentState!.validate();
+                    },
+                    validator: (String? value) {
+                      return (value!.isEmpty || value.length > 10)
+                          ? 'Invalid Input'
+                          : null;
+                    },
+                  ),
+                ]),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    Navigator.pop(context);
+                  }
+                },
+                child: const Text('Save'),
               )
-            ]
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Radio(
-                  value: 1,
-                  groupValue: _selectedChoice,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedChoice = value as int;
-                    });
-                  }),
-              Radio(
-                  value: 2,
-                  groupValue: _selectedChoice,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedChoice = value as int;
-                    });
-                  }),
-            ],
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                Navigator.pop(context);
-              }
-            },
-            child: Text('Save'),
-          )
-        ]
-      )
-    );
+            ])));
   }
 }
