@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter/services.dart';
 import 'package:titestsk/models/application_form_model.dart';
 
 class ApplicationFormView extends StatelessWidget {
@@ -25,7 +24,7 @@ class MyStatefulWidget extends StatefulWidget {
   State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
 }
 
-enum Nationality { Thai, Expat }
+enum Nationality { thai, expat }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   ApplicationFormModel model = ApplicationFormModel();
@@ -34,7 +33,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   String? selectedItem;
   DateTime selectedDate = DateTime.now();
   final TextEditingController _textEditingController = TextEditingController();
-  Nationality _selectedChoice = Nationality.Thai;
+  Nationality _selectedChoice = Nationality.thai;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -47,6 +46,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         _textEditingController.text =
             DateFormat.yMMMMd().format(selectedDate).toString();
       }
+      return null;
     });
 
     if (picked != null && picked != selectedDate) {
@@ -148,7 +148,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             ),
             RadioListTile<Nationality>(
               title: const Text('Thai'),
-              value: Nationality.Thai,
+              value: Nationality.thai,
               groupValue: _selectedChoice,
               onChanged: (Nationality? value) {
                 setState(() {
@@ -158,7 +158,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             ),
             RadioListTile(
               title: const Text('Expat'),
-              value: Nationality.Expat,
+              value: Nationality.expat,
               groupValue: _selectedChoice,
               onChanged: (Nationality? value) {
                 setState(() {
@@ -233,44 +233,38 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               children: [
                 Expanded(
                     child: ElevatedButton(
-                      onPressed: () {
-
-                        if (_formKey.currentState!.validate()) {
-
-                          debugPrint(model.prefix);
-                          debugPrint(model.firstName);
-                          Navigator.pop(context);
-
-                        }
-                      },
-                      child: const Text('Save'),
-                    )),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      debugPrint(model.prefix);
+                      debugPrint(model.firstName);
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: const Text('Save'),
+                )),
                 Row(
-                  children: List.generate(5,
-                          (index) {
-                        return const SizedBox(
-                          width: 45,
-                          height: 45,
-                          child: Text('Test'),
-                        );
-                      }),
+                  children: List.generate(5, (index) {
+                    return const SizedBox(
+                      width: 45,
+                      height: 45,
+                      child: Text('Test'),
+                    );
+                  }),
                 )
               ],
-
             )
-          ]
-          ),
+          ]),
         ),
         // Row(
         //   children: [
-            // Expanded(
-            //   child: OutlinedButton(
-            //       onPressed: () {
-            //         _formKey.currentState!.reset();
-            //       },
-            //       child: const Text('Test Outline Button')),
-            // )
-          // ],
+        // Expanded(
+        //   child: OutlinedButton(
+        //       onPressed: () {
+        //         _formKey.currentState!.reset();
+        //       },
+        //       child: const Text('Test Outline Button')),
+        // )
+        // ],
         // ),
       ]),
     ));
